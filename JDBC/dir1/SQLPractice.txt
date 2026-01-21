@@ -1,0 +1,79 @@
+SELECT `Title`, `FirstName`, `LastName` 
+FROM `employees` 
+ORDER BY Title ASC, FirstName DESC
+//ASC正序可省略
+-------------------------------------------
+SELECT `Title`,`FirstName`,`LastName` 
+FROM `employees` 
+WHERE Title <> 'Sales Representative'
+ORDER BY Title ASC, FirstName DESC
+-------------------------------------------
+SELECT `FirstName`, `LastName`, `region` 
+FROM `employees` 
+WHERE `region` IS NOT NULL
+-------------------------------------------
+SELECT `ProductID`,`ProductName`,`UnitsInStock`,`UnitsOnOrder`,`ReorderLevel`
+FROM `products` 
+WHERE `UnitsInStock` - `UnitsOnOrder` <= `ReorderLevel`
+-------------------------------------------
+SELECT `CustomerID`,`EmployeeID`,`RequiredDate`,`ShippedDate`
+FROM `orders` 
+WHERE `RequiredDate` < `ShippedDate`
+ORDER BY `CustomerID`
+-------------------------------------------
+SELECT `City`,COUNT(`EmployeeID`) count
+FROM `employees` 
+GROUP BY `City`
+HAVING COUNT >= 2
+-------------------------------------------
+select ...
+from
+where
+group by
+having
+order by
+limit
+-------------------------------------------
+SELECT `ProductID` ,SUM(`Quantity`) sum
+FROM `orderdetails` 
+GROUP BY `ProductID`
+HAVING sum < 200
+-------------------------------------------
+SELECT `CompanyName`,`ContactName`,`Phone`
+FROM `customers` 
+WHERE `CustomerID` = (
+	SELECT CustomerID 
+    FROM orders 
+    WHERE OrderID = 10254
+)
+-------------------------------------------
+SELECT `CustomerID`,`CompanyName`
+FROM `customers` 
+WHERE `CustomerID` IN (
+	SELECT `CustomerID`
+    FROM orders
+    WHERE OrderDate BETWEEN '1997-01-01' AND '1997-12-31'
+)
+-------------------------------------------
+SELECT `ProductID`,`ProductName`
+FROM `products` 
+WHERE `CategoryID` =(
+	SELECT `CategoryID`
+    FROM categories
+    WHERE CategoryName = 'Seafood'
+)
+-------------------------------------------
+SELECT e.EmployeeID, e.LastName, SUM(od.UnitPrice*od.Quantity) sum
+FROM `orders` o 
+	JOIN employees e on o.EmployeeID = e.EmployeeID
+    JOIN orderdetails od ON o.OrderID = od.OrderID
+GROUP BY o.EmployeeID
+ORDER BY sum DESC
+-------------------------------------------
+SELECT SUM(`UnitPrice`*`Quantity`)
+FROM `orderdetails` 
+WHERE `OrderID` in (
+	SELECT `OrderID`
+    FROM orders
+    WHERE EmployeeID = 5
+)
