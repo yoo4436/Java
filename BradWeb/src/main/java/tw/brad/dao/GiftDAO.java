@@ -17,7 +17,7 @@ public class GiftDAO {
 	private static final String pw = "root";
 	
 	private static final String sql_find_all = """
-			select id , name , feature , addr , tel 
+			select id , name , feature , addr , tel, picurl
 			from gift
 			order by id
 			""";

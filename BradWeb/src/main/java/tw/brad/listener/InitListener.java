@@ -8,9 +8,9 @@ import jakarta.servlet.annotation.WebListener;
 public class InitListener implements ServletContextListener {
 
 	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
+	public void contextInitialized(ServletContextEvent sce) {
 		System.out.println("Start");
-	
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("MySQL Driver Load Success");
@@ -18,10 +18,12 @@ public class InitListener implements ServletContextListener {
 			System.out.println("MySQL Dirver ERROR");
 		}
 	}
-
+	
 	@Override
-	public void contextInitialized(ServletContextEvent sce) {
+	public void contextDestroyed(ServletContextEvent sce) {
 		System.out.println("End");
 	}
+
+
 	
 }
