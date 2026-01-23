@@ -2,7 +2,7 @@ package tw.brad.apis;
 
 public class Gift {
 	private long id;
-	private String name, feature, add, tel, picurl;
+	private String name, feature, addr, tel, picurl;
 	private double lat,lng;
 	
 	public long getId() {
@@ -30,11 +30,11 @@ public class Gift {
 	}
 	
 	public String getAdd() {
-		return add;
+		return addr;
 	}
 	
-	public void setAdd(String add) {
-		this.add = add;
+	public void setAdd(String addr) {
+		this.addr = addr;
 	}
 	
 	public String getTel() {
@@ -71,6 +71,6 @@ public class Gift {
 	
 	@Override
 	public String toString() {
-		return String.format("%s:%s:%s", name, add, tel);
+		return String.format("%s:%s:%s", name, addr, tel);
 	}
 }
