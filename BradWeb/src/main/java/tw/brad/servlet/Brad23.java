@@ -9,20 +9,14 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebServlet("/Brad20")
-public class Brad20 extends HttpServlet {
+@WebServlet("/Brad23")
+public class Brad23 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-//		HttpSession session = request.getSession(false);
-		HttpSession session = request.getSession(true);
-		if (session == null) {
-			System.out.println("none");
-		}else {
-			System.out.println("else");
+		HttpSession session =  request.getSession(false);
+		if (session != null) {
+			session.invalidate();
 		}
-		
-		session.invalidate();
-		
+		response.sendRedirect("brad21.html");
 	}
 
 }
