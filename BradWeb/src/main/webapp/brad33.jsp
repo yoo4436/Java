@@ -4,10 +4,30 @@
     
     String x = request.getParameter("x");
     String y = request.getParameter("y");
-    int result = Integer.parseInt(x) + Integer.parseInt(y);
+    String op = request.getParameter("op");
+    
+    int result = 0, mod = 0;
+    
+    switch(op){
+	    case "1":
+			result = Integer.parseInt(x) + Integer.parseInt(y);
+			break;
+	    case "2":
+			result = Integer.parseInt(x) - Integer.parseInt(y);
+			break;
+	    case "3":
+			result = Integer.parseInt(x) * Integer.parseInt(y);
+			break;
+	    case "4":
+			result = Integer.parseInt(x) / Integer.parseInt(y);
+			mod = Integer.parseInt(x) % Integer.parseInt(y);
+			break;
+	 
+    }
+    
     
     JSONObject obj = new JSONObject();
-    obj.put("result", result);
+    obj.put("result", result + (mod == 0 ? "" : "......" + mod));
     
     out.print(obj);
     
