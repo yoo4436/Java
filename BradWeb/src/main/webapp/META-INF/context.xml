@@ -6,6 +6,21 @@
 		type="javax.sql.DataSource"
 		
 		driverClassName="com.mysql.cj.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/iii"
+		username="root"
+		password="root"
+		
+		maxTotal="20"
+		maxIdel="10"
+		minIdel="5"
+	/>
+	
+	<Resource
+		name="northwind"
+		auth="Container"
+		type="javax.sql.DataSource"
+		
+		driverClassName="com.mysql.cj.jdbc.Driver"
 		url="jdbc:mysql://localhost:3306/northwind"
 		username="root"
 		password="root"
@@ -13,6 +28,5 @@
 		maxTotal="20"
 		maxIdel="10"
 		minIdel="5"
-		
 	/>
 </Context>
