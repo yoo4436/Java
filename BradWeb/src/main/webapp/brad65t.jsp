@@ -3,12 +3,12 @@
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.sql" prefix="sql" %>
 <sql:query var="rs" dataSource="jdbc/mysql">
-	select count(*) from food
+	select count(*) as cnt from food
 </sql:query>
 
 <c:set var="rpp">10</c:set>
-<c:set var="total">${rs.rows[0].count }</c:set>
-<c:set var="totalPages">${BradUtils.calcPage(total, rpp) }</c:set>
+<c:set var="total">${rs.rows[0].cnt }</c:set>
+<c:set var="totalPages">${total % rpp == 0 ? (total / rpp) : ((total / rpp) +1).intValue() }</c:set>
 <c:set var="page">${empty param.page?1:param.page }</c:set>
 <c:set var="start">${(page - 1) * rpp }</c:set>
 <c:set var="prev">${page == 1?1:page -1 }</c:set>
@@ -17,6 +17,9 @@
 	select * from food limit ${start }, ${rpp }
 </sql:query>
 
+<%
+//${BradUtils.calcPage(total, rpp) }
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -54,6 +57,5 @@
 				</tr>
 			</c:forEach>
 		</table>
-	
 	</body>
 </html>
