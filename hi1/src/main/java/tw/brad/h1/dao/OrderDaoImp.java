@@ -22,6 +22,7 @@ public class OrderDaoImp implements OrderDao {
 
 	@Override
 	public Optional<Order> findByIdWithItems(Session session, Long id) {
+		// LEFT JOIN => 沒有 item 也要查到
 		String hql = """
 				select o
 				from Order o
@@ -44,12 +45,65 @@ public class OrderDaoImp implements OrderDao {
 		String hql = """
 				SELECT o
 				FROM Order o
-				ORDER BY o.id
+				ORDER BY o.id DESC
 				""";
 		return session.createQuery(hql, Order.class)
 				.setFirstResult(start)
 				.setMaxResults(size)
 				.list();
+	}
+	
+	//-------HQL-------
+	public void test1(Session session) {
+		String hql ="""
+				select o
+				from Order o
+				ORDER BY o.odate DESC
+				""";
+		List<Order> orders = session.createQuery(hql, Order.class).list();
+	}
+	
+	public void test2(Session session) {
+		String hql = """
+				select o
+				from Order o 
+				where o.customer = :cname
+				""";
+		List<Order> orders = session.createQuery(hql, Order.class)
+				.setParameter("cname", hql).list();
+	}
+	
+	public void test3(Session session) {
+		String hql = """
+				select o
+				from Order o 
+				where o.id = :id
+				""";
+		Order order = session.createQuery(hql, Order.class)
+				.setParameter("id", 1L).uniqueResult();
+	}
+	
+	public void test4(Session session) {
+		String hql = """
+				select distinct o 
+				from Order o
+				join o.items i 
+				where i.pname like :key
+				order by o.id 
+				""";
+		List<Order> order = session.createQuery(hql, Order.class)
+				.setParameter("id", 1L).list();
+	}
+	
+	public void test5(Session session) {
+		String hql = """
+				select o 
+				from Order o
+				LEFT JOIN FETCH o.items
+				where o.id = :id
+				""";
+		Order order = session.createQuery(hql, Order.class)
+				.setParameter("id", 1L).uniqueResult();
 	}
 	
 }
