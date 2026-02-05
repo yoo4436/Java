@@ -24,10 +24,12 @@ public class Brad16 {
 		while(true) {
 			List<Course> courses = dao.getAllCourse();
 			for (Course course : courses) {
-				System.out.printf("%d. %s\n", course.getId(), course.getCname());
+				if (!isExist(s1, course.getStudents())) {
+					System.out.printf("%d. %s\n", course.getId(), course.getCname());
+				}
 			}
 			System.out.println("-----");
-			System.out.println("Which? ");
+			System.out.println("Which? (0: for Exit):");
 			long cid = scanner.nextLong();
 			
 			if(cid <= 0) break;
@@ -40,6 +42,6 @@ public class Brad16 {
 	}
 
 	static boolean isExist(Student s, Set<Student> ss) {
-		return ss.stream().anyMatch(Student -> Student.getId().equals(s.getId()));
+		return ss.stream().anyMatch(student -> student.getId().equals(s.getId()));
 	}
 }
