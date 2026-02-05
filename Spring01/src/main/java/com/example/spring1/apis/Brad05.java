@@ -1,0 +1,18 @@
+package com.example.spring1.apis;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/brad05")
+public class Brad05 {
+	
+	@RequestMapping("/calc") // /brad05/calc?x=10&y=3
+	public void calc(@RequestParam String x, @RequestParam String y) {
+		System.out.printf("x = %s : y = %s\n",x ,y);
+		int sum = Integer.parseInt(x) + Integer.parseInt(y);
+		System.out.printf("sum = %d\n",sum);
+	}
+}
