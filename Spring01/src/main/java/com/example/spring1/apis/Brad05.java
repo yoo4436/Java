@@ -1,8 +1,11 @@
 package com.example.spring1.apis;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.spring1.dto.User;
 
 @RestController
 @RequestMapping("/brad05")
@@ -22,5 +25,15 @@ public class Brad05 {
 		} catch (NumberFormatException e) {
 			return "ERROR";
 		}
+	}
+
+	@RequestMapping("/test1")
+	public void test1(@RequestBody User user) {
+		System.out.println(user.getName());
+		System.out.println(user.getGender());
+		System.out.println(user.getAge());
+		System.out.println(user.getBike().getSpeed());
+		System.out.println(user.getAlias()[2]);
+		System.out.println(user.getTest().get("key2"));
 	}
 }
