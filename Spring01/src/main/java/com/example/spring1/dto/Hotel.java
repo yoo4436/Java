@@ -14,6 +14,8 @@ public class Hotel {
     @JsonProperty("Tel")
     private String tel;
 
+    private int error;
+
     public Long getId() {
         return id;
     }
@@ -37,6 +39,14 @@ public class Hotel {
     }
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+    public int getError() {
+        return error;
+    }
+
+    public void setError(int error) {
+        this.error = error;
     }
 
 }

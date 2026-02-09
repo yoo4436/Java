@@ -57,5 +57,17 @@ public class Brad10 {
         System.out.println("F");
     
     }
+
+    @RequestMapping("/test2")
+    public void test2() {
+        String url = "https://data.moa.gov.tw/Service/OpenData/ODwsv/ODwsvTravelStay.aspx";
 	
+		String json = restTemplate.getForObject(url, String.class);
+        ObjectMapper mapper = new ObjectMapper();
+        Hotel[] hotels = mapper.readValue(json, new TypeReference<Hotel[]>() {});
+        for (Hotel hotel: hotels) {
+            System.out.printf("%s : %s : %s\n", hotel.getName(), hotel.getAddr(), hotel.getTel());
+        }
+
+    }
 }
