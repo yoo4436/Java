@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpSession;
 import tw.brad.spring03.entity.Member;
 import tw.brad.spring03.service.MemberService;
 
@@ -57,5 +58,24 @@ public class MemberController {
         return  ResponseEntity.ok(map);
     }
 
+    @PostMapping("/loginV3")
+    public ResponseEntity<Map<String,Boolean>> login(
+            @RequestBody Map<String,String> body,
+            HttpSession session){
+        String email = body.get("email");
+        String pw = body.get("pw");
 
+        Member member = service.loginV3(email, pw);
+
+         Map<String,Boolean> map;
+        if (member != null){
+            session.setAttribute("member", member);
+            map = Map.of("success", true);
+        }else {
+            session.invalidate();
+            map = Map.of("success", false);
+        }
+        
+        return  ResponseEntity.ok(map);
+    }
 }

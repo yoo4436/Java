@@ -51,4 +51,12 @@ public class MemberService {
         }
         return false;
     }
+
+    public Member loginV3(String email, String pw) {
+        Member member = repository.findByEmail(email).orElse(null);
+        if (member != null && BCrypt.checkpw(pw, member.getPw())){
+            return member;
+        }
+        return null;
+    }
 }
