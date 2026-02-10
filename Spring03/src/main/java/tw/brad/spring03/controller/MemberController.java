@@ -34,11 +34,10 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<Map<String,Boolean>> register(@RequestBody Member member) {
-        System.out.println(member.getEmail());
-        System.out.println(member.getPw());
-        System.out.println(member.getName());
+        
+        boolean isSuccess = service.register(member);
 
-        Map<String,Boolean> map = Map.of("success", true);
+        Map<String,Boolean> map = Map.of("success", isSuccess);
         return  ResponseEntity.ok(map);
     }
 }

@@ -22,8 +22,8 @@
         let name = document.getElementById("name");
         let msg = document.getElementById("msg");
         let regForm = document.getElementById("regForm");
+        let result = document.getElementById("result");
         email.addEventListener('blur', async () => {
-            console.log("OK");
             let url = "/api/members/exist?email=" + email.value;
             let res = await fetch(url);
             let isExist = await res.json();
@@ -39,6 +39,7 @@
                 pw: pw.value,
                 name: name.value
             };
+            console.log(JSON.stringify(data));
             let url = "/api/members/register"
             let res = await fetch(url, {
                 method: 'POST',
@@ -49,6 +50,11 @@
             });
             let json = await res.json();
             console.log(json);
+            if (json.success) {
+                location.href = "login.html";
+            } else {
+                result.textContent = "註冊失敗";
+            }
         });
 
     </script>

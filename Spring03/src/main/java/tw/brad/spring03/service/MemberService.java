@@ -3,7 +3,9 @@ package tw.brad.spring03.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tw.brad.spring03.entity.Member;
 import tw.brad.spring03.repository.MemberRepository;
+import tw.brad.spring03.util.BCrypt;
 
 @Service
 public class MemberService {
@@ -12,5 +14,16 @@ public class MemberService {
 
     public boolean checkEmail(String email) {
         return repository.existsByEmail(email);
+    }
+
+    public boolean register(Member member) {
+        if (repository.existsByEmail(member.getEmail())) {
+            return false;
+        }
+
+        member.setPw(BCrypt.hashpw(member.getPw(), BCrypt.gensalt()));
+        Member m = repository.save(member);
+        System.out.println(m.getId());
+        return m != null;
     }
 }
