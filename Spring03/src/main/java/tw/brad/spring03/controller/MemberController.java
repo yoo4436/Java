@@ -1,8 +1,11 @@
 package tw.brad.spring03.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,9 +76,41 @@ public class MemberController {
             map = Map.of("success", true);
         }else {
             session.invalidate();
-            map = Map.of("success", false);
+            map = Map.of("Fail", false);
         }
+
+        return  ResponseEntity.ok(map);
+    }
+
+    @Autowired
+    @Qualifier("companyName")
+    private String companyName;
+
+    @Value("${company.tel}")
+    private String companyTel;
+
+    @PostMapping("/status")
+    public ResponseEntity<Map<String,Object>> status(HttpSession session) {
+        Object member = session.getAttribute("member");
         
+        Map<String,Object> map = new HashMap<>();
+        map.put("success", member != null);
+        map.put("member", member);
+        map.put("companyName", companyName);
+        map.put("companyTel", companyTel);
+        // System.out.println(companyTel);
+        return  ResponseEntity.ok(map);
+    }
+
+
+
+    @RequestMapping("/logout")
+    public ResponseEntity<Map<String,String>> logout(HttpSession session) {
+        session.invalidate();
+
+        Map<String,String> map = new HashMap<>();
+        map.put("success", "ok");
+
         return  ResponseEntity.ok(map);
     }
 }
