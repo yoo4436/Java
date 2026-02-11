@@ -1,21 +1,30 @@
 package tw.brad.spring03.controller;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
+import tw.brad.spring03.config.ReadConfig;
+import tw.brad.spring03.dto.MemberForm;
 import tw.brad.spring03.entity.Member;
+import tw.brad.spring03.repository.MemberRepository;
 import tw.brad.spring03.service.MemberService;
 
 @RestController
@@ -32,54 +41,54 @@ public class MemberController {
     }
 
     /*
-    request: Member => {}
-    response: {"success": true/false}
-    */
+     * request: Member => {}
+     * response: {"success": true/false}
+     */
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String,Boolean>> register(@RequestBody Member member) {
-        
+    public ResponseEntity<Map<String, Boolean>> register(@RequestBody Member member) {
+
         boolean isSuccess = service.register(member);
 
-        Map<String,Boolean> map = Map.of("success", isSuccess);
-        return  ResponseEntity.ok(map);
+        Map<String, Boolean> map = Map.of("success", isSuccess);
+        return ResponseEntity.ok(map);
     }
 
     /*
-        request: {email:xxx,pw:xxx}
-        response: {"success": true/false}
-    */
+     * request: {email:xxx,pw:xxx}
+     * response: {"success": true/false}
+     */
     @PostMapping("/login")
-    public ResponseEntity<Map<String,Boolean>> login(@RequestBody Map<String,String> body){
+    public ResponseEntity<Map<String, Boolean>> login(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         String pw = body.get("pw");
-        
+
         // boolean isSuccess = service.login(email, pw);
         boolean isSuccess = service.loginV2(email, pw);
 
-        Map<String,Boolean> map = Map.of("success", isSuccess);
-        return  ResponseEntity.ok(map);
+        Map<String, Boolean> map = Map.of("success", isSuccess);
+        return ResponseEntity.ok(map);
     }
 
     @PostMapping("/loginV3")
-    public ResponseEntity<Map<String,Boolean>> login(
-            @RequestBody Map<String,String> body,
-            HttpSession session){
+    public ResponseEntity<Map<String, Boolean>> login(
+            @RequestBody Map<String, String> body,
+            HttpSession session) {
         String email = body.get("email");
         String pw = body.get("pw");
 
         Member member = service.loginV3(email, pw);
 
-         Map<String,Boolean> map;
-        if (member != null){
+        Map<String, Boolean> map;
+        if (member != null) {
             session.setAttribute("member", member);
             map = Map.of("success", true);
-        }else {
+        } else {
             session.invalidate();
             map = Map.of("Fail", false);
         }
 
-        return  ResponseEntity.ok(map);
+        return ResponseEntity.ok(map);
     }
 
     @Autowired
@@ -90,27 +99,92 @@ public class MemberController {
     private String companyTel;
 
     @PostMapping("/status")
-    public ResponseEntity<Map<String,Object>> status(HttpSession session) {
+    public ResponseEntity<Map<String, Object>> status(HttpSession session) {
         Object member = session.getAttribute("member");
-        
-        Map<String,Object> map = new HashMap<>();
+
+        Map<String, Object> map = new HashMap<>();
         map.put("success", member != null);
         map.put("member", member);
         map.put("companyName", companyName);
         map.put("companyTel", companyTel);
         // System.out.println(companyTel);
-        return  ResponseEntity.ok(map);
+        return ResponseEntity.ok(map);
     }
 
-
-
     @RequestMapping("/logout")
-    public ResponseEntity<Map<String,String>> logout(HttpSession session) {
+    public ResponseEntity<Map<String, String>> logout(HttpSession session) {
         session.invalidate();
 
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put("success", "ok");
 
-        return  ResponseEntity.ok(map);
+        return ResponseEntity.ok(map);
+    }
+
+    @Autowired
+    private NamedParameterJdbcTemplate jdbc;
+
+    @PostMapping("/{id}")
+    public void test1(@PathVariable Integer id,
+            @RequestParam MultipartFile upload) {
+        try {
+            byte[] bytes = upload.getBytes();
+            String sql = """
+                    update member set icon = :icon
+                    where id = :id
+                    """;
+            Map<String, Object> params = Map.of(
+                    "id", id,
+                    "icon", bytes);
+            int n = jdbc.update(sql, params);
+            System.out.println(n);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @PostMapping("/v2/{id}")
+    public void test2(@PathVariable Long id,
+            @RequestParam MultipartFile upload) {
+        try {
+            byte[] bytes = upload.getBytes();
+            Member member = memberRepository.findById(id).orElse(null);
+            if (member != null) {
+                member.setIcon(bytes);
+                memberRepository.save(member);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    @Autowired
+    private ReadConfig readConfig;
+
+    @PostMapping("/test3")
+    public void test3(@ModelAttribute MemberForm memberForm) {
+        System.out.println(memberForm.getAccount()); 
+        System.out.println(memberForm.getFiles().size());
+        System.out.println(readConfig.getUploadDir());
+
+        File here = new File(".");
+        System.out.println(here.getAbsolutePath());
+
+        List<MultipartFile> files = memberForm.getFiles();
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                String fname = here.getAbsolutePath() + "/Spring03/" + 
+                                readConfig.getUploadDir() + "/" + memberForm.getAccount() + "_" + 
+                                file.getOriginalFilename();
+                try {
+                    file.transferTo(new File(fname));
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        }
     }
 }
