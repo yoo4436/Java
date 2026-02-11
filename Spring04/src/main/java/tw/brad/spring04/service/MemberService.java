@@ -8,6 +8,7 @@ import tw.brad.spring04.entity.Member;
 import tw.brad.spring04.entity.Profile;
 import tw.brad.spring04.repo.MemberRepo;
 import tw.brad.spring04.repo.ProfileRepo;
+import tw.brad.spring04.util.BCrypt;
 
 @Service
 public class MemberService {
@@ -19,7 +20,30 @@ public class MemberService {
 
     @Transactional
     public Member save(Member member, Profile profile) {
+        member.setPwd(BCrypt.hashpw(member.getPwd(), BCrypt.gensalt()));
         member.setProfile(profile);
         return memberRepo.save(member);
     }
+
+    @Transactional
+    public Profile setProfile2Member(Profile profile, Long memberId) {
+        Member member = memberRepo.findById(memberId).orElse(null);
+        if (member != null) {
+            Profile p = member.getProfile();
+            if (p != null) {
+                profile.setId(p.getId());
+            }
+            member.setProfile(profile);
+
+            Member save = memberRepo.save(member);
+            return save.getProfile();
+        }
+        return null;
+    }
+
+    public Member findMemberById(Long memberId) {
+        return memberRepo.findById(memberId).orElse(null);
+    }
+
+
 }
