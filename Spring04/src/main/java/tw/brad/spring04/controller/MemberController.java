@@ -1,0 +1,51 @@
+package tw.brad.spring04.controller;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import tw.brad.spring04.entity.Member;
+import tw.brad.spring04.entity.Profile;
+import tw.brad.spring04.service.MemberService;
+
+@RestController
+@RequestMapping("/members")
+public class MemberController {
+
+    @Autowired
+    private MemberService service;
+    /*
+        POST /members
+        {
+            "email": xxx,
+            "pwd": xxx,
+            "profile": {
+                "cname": xxx
+                "age": 18
+            }
+        }
+    */
+
+    @PostMapping("")
+    public  ResponseEntity<Member> addMember(@RequestBody Map<String,Object> data){
+        Member member = new Member();
+        member.setEmail((String)data.get("email"));
+        member.setPwd((String)data.get("pwd"));
+    
+        Profile profile = null;
+        Map<String,Object> pData = (Map<String,Object>)data.get("profile");
+        if (pData != null) {
+            profile = new Profile();
+            profile.setCname((String)pData.get("cname"));
+            profile.setAge((Integer)pData.get("age"));
+        }
+
+        Member saveMember = service.save(member, profile);
+        return ResponseEntity.ok(saveMember);
+    }
+}
