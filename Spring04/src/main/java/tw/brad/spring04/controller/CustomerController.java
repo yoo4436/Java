@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import tw.brad.spring04.dto.CustomerDto;
 import tw.brad.spring04.dto.OrderDetailDto;
 import tw.brad.spring04.dto.OrderDto;
@@ -25,8 +27,9 @@ public class CustomerController {
     @Autowired
     private CustomerRepo customerRepo;
 
+    @Operation(summary = "查詢客戶訂單", description = "OK!Keep Going")
     @GetMapping("/v1/{id}")
-    public ResponseEntity<Customer> test1(@PathVariable String id){
+    public ResponseEntity<Customer> test1(@Parameter(description="Enter CustomerID")@PathVariable String id){
         return ResponseEntity.ok(customerRepo.findById(id).orElse(null));
     }
 
