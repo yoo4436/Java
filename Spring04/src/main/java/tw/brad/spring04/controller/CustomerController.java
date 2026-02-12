@@ -84,6 +84,14 @@ public class CustomerController {
         }
     }
 
+    @GetMapping("/v5/{id}")
+    public ResponseEntity<CustomerDto> test5(@PathVariable String id){
+        return customerRepo.findById(id).map(this::toCustomerDto)
+                    .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+                    // orElseGet(): isEmpty => delay
+                    // orElse() => right now
+    }
+
     private CustomerDto toCustomerDto(Customer c) {
         return new CustomerDto(
                 c.getCustomerid(),
@@ -106,4 +114,6 @@ public class CustomerController {
                 od.getQuantity(), 
                 od.getProduct().getProductName());
     }
+
+    
 }
