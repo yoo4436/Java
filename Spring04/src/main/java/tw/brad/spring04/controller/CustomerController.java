@@ -2,6 +2,7 @@ package tw.brad.spring04.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,7 @@ public class CustomerController {
     @GetMapping("/v3/{id}")
     public ResponseEntity<CustomerDto> test3(@PathVariable String id){
         Customer c = customerRepo.findById(id).orElse(null);
+        //-----------------
         List<Order> orders = c.getOrders();
 
         ArrayList<OrderDto> orderlList = new ArrayList<>();
@@ -63,10 +65,45 @@ public class CustomerController {
             orderlList.add(new OrderDto(o.getOrderid(), o.getOrderDate(), detailDtos));
         }
 
-
+        //-------------------
         CustomerDto cDto = new CustomerDto(
                 c.getCustomerid(), c.getCompanyName(), orderlList);
 
         return ResponseEntity.ok(cDto);
+    }
+
+    @GetMapping("/v4/{id}")
+    public ResponseEntity<CustomerDto> test4(@PathVariable String id){
+        Optional<Customer> opt = customerRepo.findById(id);
+        if (opt.isPresent()) {
+            Customer c = opt.get();
+            CustomerDto cDto = toCustomerDto(c);
+            return ResponseEntity.ok(cDto);
+        }else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private CustomerDto toCustomerDto(Customer c) {
+        return new CustomerDto(
+                c.getCustomerid(),
+                c.getCompanyName(),
+                c.getOrders().stream().map(this::toOrderDto).toList()
+        );
+    }
+
+    private OrderDto toOrderDto(Order o) {
+        return new OrderDto(
+                o.getOrderid(), 
+                o.getOrderDate(),
+                o.getOrderdetails().stream().map(this::toOrderDetailDto).toList()
+                );
+    }
+
+    private OrderDetailDto toOrderDetailDto(OrderDetail od) {
+        return new OrderDetailDto(
+                od.getUnitPrice(), 
+                od.getQuantity(), 
+                od.getProduct().getProductName());
     }
 }
