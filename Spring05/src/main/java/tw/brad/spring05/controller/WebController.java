@@ -5,9 +5,12 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import tw.brad.spring05.test.User;
+import tw.brad.spring05.test.UserForm;
 
 /*
 request => Controller -> Model 網頁所需要的資料
@@ -56,5 +59,21 @@ public class WebController {
         model.addAttribute("now", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         return "page1";
+    }
+
+    @RequestMapping("/page2/{status}")
+    public String page2(Model model, @PathVariable String status) {
+        model.addAttribute("status", status);
+        return "page2";
+    }
+
+    @GetMapping("/page3")
+    public String page3(Model model) {
+        UserForm uf = new UserForm();
+        uf.setEmail("輸入Email");
+        model.addAttribute("userForm", uf);
+
+
+        return "page3";
     }
 }
