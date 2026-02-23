@@ -27,7 +27,7 @@ public class MemberService {
         MultipartFile iconFile = memberForm.getIconFile();
         byte[] icon = iconFile != null && !iconFile.isEmpty() ? iconFile.getBytes():null;
         member.setIcon(icon);
-        System.out.println("1111");
+        // System.out.println("1111");
         return memberRepo.save(member);
     }
 
