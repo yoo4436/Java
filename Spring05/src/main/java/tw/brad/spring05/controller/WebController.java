@@ -5,10 +5,14 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.validation.Valid;
 import tw.brad.spring05.test.User;
 import tw.brad.spring05.test.UserForm;
 
@@ -75,5 +79,29 @@ public class WebController {
 
 
         return "page3";
+    }
+
+    @PostMapping("/page3")
+    public String page4(
+                Model model,
+                @ModelAttribute @Valid UserForm uf,
+                BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "page3";
+        }
+
+        System.out.println(uf.getEmail());
+        System.out.println(uf.getPwd());
+        System.out.println(uf.getName());
+
+        return "page4";
+    }
+
+    @RequestMapping("/page5")
+    public String page5() {
+        
+        
+        return "page5"; 
     }
 }
