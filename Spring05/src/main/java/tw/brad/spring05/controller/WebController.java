@@ -2,6 +2,7 @@ package tw.brad.spring05.controller;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,9 +100,9 @@ public class WebController {
     }
 
     @RequestMapping("/page5")
-    public String page5() {
-        
-        
+    public String page5(Model model) {
+        List<String> areas = List.of("北區","中區","西區","東區","南區","大里區","霧峰區");
+        model.addAttribute("areas", areas);        
         return "page5"; 
     }
 }
