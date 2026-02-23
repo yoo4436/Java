@@ -1,10 +1,10 @@
-package tw.brad.spring05;
+package tw.brad.spring06;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Spring05ApplicationTests {
+class Spring06ApplicationTests {
 
 	@Test
 	void contextLoads() {
