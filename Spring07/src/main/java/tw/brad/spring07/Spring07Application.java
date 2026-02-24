@@ -1,4 +1,4 @@
-package tw.brad.spring04;
+package tw.brad.spring07;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
