@@ -1,27 +1,62 @@
 package tw.brad.spring06.aspect;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import tw.brad.spring06.controller.TestController;
 import tw.brad.spring06.dto.Register;
 
 @Aspect
 @Component
 public class MyAspect {
 
-    @Pointcut("execution(* tw.brad.spring06.controller..*(..))")
-    public void doAllController() {}
+    private final TestController testController;
 
-    @Pointcut("execution(* tw.brad.spring06.controller.TestController.*(..))")
-    public void doTestController() {}
-
-    @Pointcut("execution(* tw.brad.spring06.controller..*(..))")
-    public void doControllerMethod() {
-
+    MyAspect(TestController testController) {
+        this.testController = testController;
     }
+	
+	@Pointcut("execution(* tw.brad.spring06.controller..*(..))")
+	public void doAllController() {}
+
+	@Pointcut("execution(* tw.brad.spring06.controller.TestController.*(..))")
+	public void doTestController() {}
+
+	@Pointcut("execution(* tw.brad.spring06.controller.BradController.*(..))")
+	public void doBradController() {}
+	
+	//-----------------------------------------------------
+	@Before("doTestController()")
+	public void doBefore() {
+		System.out.println("doBefore");
+	}
+
+	@After("doTestController()")
+	public void doAfter() {
+		System.out.println("doAfter");
+	}
+	
+	@Around("doTestController()")
+	public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
+		System.out.println("around1");
+		Object obj = joinPoint.proceed();
+		System.out.println("around2");
+		return obj;
+	}
+
+	@Around("doAllController()")
+	public Object doAllAround(ProceedingJoinPoint joinPoint) throws Throwable {
+		System.out.println("aroundAll1");
+		Object obj = joinPoint.proceed();
+		System.out.println("aroundAll2");
+		return obj;
+	}
 
     @Before("doBradController()")
     public void doBradBefore(JoinPoint joinPoint) {
