@@ -4,8 +4,44 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@2.3.3/lib/bundles/stomp.umd.min.js"></script>
     </head>
+
     <body>
+        <h1>Chat Room</h1>
+        <hr>
+        <div>
+            Email: <input id="email"><br>
+            Password: <input type="password" id="pw"><br>
+            <button id="login">Login</button>
+        </div>
+        <p>登入狀態: <span id="status">味登入</span></p>
+        <div id="chatDiv" style="display: none;">
+            <div id="chatBox" style="border: 1px solid #ccc; width: 480px; height: 300px; overflow-y: scroll;" ></div>
+            <input id="msg" style="width: 400px;">
+            <button id="send">Send</button>
+        </div>
+
+        <script>
+            document.getElementById("login").onclick = async() => {
+                
+            };
+            
+            document.getElementById("send").onclick = async() => {
+
+            };
         
+            function connectWebSocket(){
+
+            }
+
+            function receiveMessage(msg){
+
+            }
+
+        </script>
     </body>
+
+   
 </html>
