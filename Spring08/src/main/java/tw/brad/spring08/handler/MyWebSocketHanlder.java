@@ -13,6 +13,8 @@ public class MyWebSocketHanlder extends TextWebSocketHandler {
 
     private static final Set<WebSocketSession> sessions = new HashSet<>();
     // private static final Set<WebSocketSession> sessions2 = new CopyOnWriteArraySet<>();
+    private static boolean isExistTeacher = false;
+    private static WebSocketSession teacherSession;	
 
     public MyWebSocketHanlder() {
         System.out.println("MyWebSocketHanlder");
@@ -20,21 +22,31 @@ public class MyWebSocketHanlder extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        sessions.add(session);
-    }
-
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.remove(session);
     }
 
     @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        sessions.add(session);
+    }
+
+    @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        for (WebSocketSession s : sessions) {
-            if (s.isOpen()) {
-                s.sendMessage(message);
-            }
-        }
+		String mesg = message.getPayload();
+		// 判斷是否 Teacher => mesg
+		if (!isExistTeacher && mesg.contains("isTeacher")) {
+			isExistTeacher = true;
+			teacherSession = session;
+			System.out.println("Teacher Exist");
+		}else if (session == teacherSession) {
+			System.out.println("Teacher Drawing");
+			for (WebSocketSession s : sessions) {
+				if (s.isOpen()) {
+					s.sendMessage(message);
+				}
+			}		
+		}		
+		
     }
     
 }

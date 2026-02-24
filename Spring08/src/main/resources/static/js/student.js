@@ -7,7 +7,7 @@ window.onload = function(){
 		isConnect = true;
 	}
 		
-	webSocket.onmessage = function(){
+	webSocket.onmessage = function(event){
 		if (isConnect){
 			let msgObj = JSON.parse(event.data);
 			if (msgObj.isClear){
