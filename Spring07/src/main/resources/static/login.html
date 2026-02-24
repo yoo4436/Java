@@ -9,8 +9,8 @@
         <h1>Member Login</h1>
         <hr>
         <form id="loginForm">
-            Email: <input id="email" required="required">
-            Password: <input id="pw" required="required" type="password">
+            Email: <input id="email" required="required"><br>
+            Password: <input id="pw" required="required" type="password"><br>
             <input type="submit" value="Login">
         </form>
         <hr>
@@ -35,6 +35,13 @@
 
                 let data = await resp.json();
                 console.log(data);
+
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    window.location.href = "main.html";
+                }else {
+                    console.log("Login Failure");
+                }
 
             })
         </script>
