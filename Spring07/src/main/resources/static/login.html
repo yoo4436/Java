@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>Member Login</h1>
+        <hr>
+        <form id="loginForm">
+            Email: <input id="email" required="required">
+            Password: <input id="pw" required="required" type="password">
+            <input type="submit" value="Login">
+        </form>
+        <hr>
+        <span id="msg"></span>
+
+        <script>
+            document.getElementById("loginForm").addEventListener("submit", async function (e) {
+                e.preventDefault();
+                let email = document.getElementById("email").value.trim();
+                let pw = document.getElementById("pw").value.trim();
+                
+                let resp = await fetch("api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "email": email,
+                        "pw": pw                    
+                    })
+                })
+
+                let data = await resp.json();
+                console.log(data);
+
+            })
+        </script>
+    </body>
+</html>
