@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
         <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@2.3.3/lib/bundles/stomp.umd.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     </head>
 
     <body>
@@ -24,6 +24,8 @@
         </div>
 
         <script>
+            let token = null; 
+		    let client = null;
             document.getElementById("login").onclick = async() => {
                 let email = document.getElementById("email").value;
                 let pw = document.getElementById("pw").value;
@@ -41,8 +43,9 @@
                     let data = await resp.json();
                     console.log(data);
                     token = data.token;
-                    document.getElementById("status").innerHTML = "已登入";
+                    document.getElementById("status").innerHTML = "已登入(" + data.name + ")";
                     document.getElementById("chatDiv").style.display = "block";
+                    connectWebSocket();
                 }
             };
             
@@ -56,13 +59,13 @@
             };
         
             function connectWebSocket(){
-                let socket = new SocketJS('/ws-chat?token=' +encodeURIComponent('Bearer ' + token));
+                let socket = new SockJS('/ws-chat?token=' +encodeURIComponent('Bearer ' + token));
                 client = Stomp.over(socket);
                 client.connect({}, function(frame){
                     console.log(frame);
                     client.subscribe("/topic/public", function(mesg){
                         console.log(mesg);
-                        let body = msg.JSON.parse(mesg.body);
+                        let body = JSON.parse(mesg.body);
                         console.log(body);
                         console.log("----");
                         receiveMessage(body);
@@ -75,7 +78,7 @@
             function receiveMessage(msg){
                 let box = document.getElementById("chatBox");
                 let line = document.createElement("div");
-                line.innerHTML = ``;
+                line.innerHTML = `[(${msg.time})${msg.email}]:${msg.content}`;
                 box.appendChild(line);
             }
 
