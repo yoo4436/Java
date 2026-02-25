@@ -25,19 +25,58 @@
 
         <script>
             document.getElementById("login").onclick = async() => {
-                
+                let email = document.getElementById("email").value;
+                let pw = document.getElementById("pw").value;
+            
+                let resp = await fetch("/auth/login", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        "email": email,
+                        "pw": pw
+                    })
+                });
+                console.log(resp.ok)
+                if (resp.ok) {
+                    let data = await resp.json();
+                    console.log(data);
+                    token = data.token;
+                    document.getElementById("status").innerHTML = "已登入";
+                    document.getElementById("chatDiv").style.display = "block";
+                }
             };
             
             document.getElementById("send").onclick = async() => {
+                let input = document.getElementById("msg");
+                let msg = input.value.trim();
 
+                client.send('/app/chat/send',{},msg);
+
+                input.value = '';
             };
         
             function connectWebSocket(){
+                let socket = new SocketJS('/ws-chat?token=' +encodeURIComponent('Bearer ' + token));
+                client = Stomp.over(socket);
+                client.connect({}, function(frame){
+                    console.log(frame);
+                    client.subscribe("/topic/public", function(mesg){
+                        console.log(mesg);
+                        let body = msg.JSON.parse(mesg.body);
+                        console.log(body);
+                        console.log("----");
+                        receiveMessage(body);
+                    });
+
+                });
 
             }
 
             function receiveMessage(msg){
-
+                let box = document.getElementById("chatBox");
+                let line = document.createElement("div");
+                line.innerHTML = ``;
+                box.appendChild(line);
             }
 
         </script>

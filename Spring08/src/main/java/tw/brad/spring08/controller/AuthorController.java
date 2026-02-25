@@ -33,6 +33,6 @@ public class AuthorController {
         }
         String token = JwtToken.createToken(member.getEmail());
 
-        return ResponseEntity.ok(new LoginResponse(token, login.getEmail()));
+        return ResponseEntity.ok(new LoginResponse(token, member.getEmail(), member.getName()));
     }
 }
