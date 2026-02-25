@@ -28,9 +28,9 @@ public class SecurityConfig {
                 .formLogin(form -> form.loginPage("/login")
                 .usernameParameter("email").passwordParameter("pw")
                 .loginProcessingUrl("/doLogin")
-                .defaultSuccessUrl("/main").failureUrl("/login").permitAll()
+                .defaultSuccessUrl("/main").failureUrl("/login?error").permitAll()
                 ).logout(logout -> logout.logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/login?logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 ).exceptionHandling(e -> e.accessDeniedPage("/page403"));

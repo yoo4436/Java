@@ -8,6 +8,8 @@
     <body>
         <h1>Login Page</h1>
         <hr>
+        <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+        <div th:if="${logout}" th:text="${logout}" style="color: green;"></div>
         <form th:action="@{/doLogin}" method="post">
             <div>
                 <label>帳號</label>
