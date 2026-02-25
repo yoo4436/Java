@@ -23,6 +23,12 @@ public class MemberController {
     public String main(Model model) {
         model.addAttribute("title", "會員主頁");
         return "main";
+
+    }
+
+    @GetMapping("/member/page1")
+    public String page1(Model model) {
+        return "/member/page1";
     }
 
     @GetMapping("/admin")
