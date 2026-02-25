@@ -1,4 +1,4 @@
-package tw.brad.spring08.websocket;
+package tw.brad.spring08.config;
 
 import java.security.Principal;
 import java.util.Map;
@@ -25,14 +25,14 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        
+
         registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/topic");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        
+
         registry.addEndpoint("/ws-chat")
                 .addInterceptors(new HandshakeInterceptor() {
 
@@ -60,18 +60,19 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
                             WebSocketHandler wsHandler, @Nullable Exception exception) {
 
                     }
-                    
+
                 })
                 .setAllowedOriginPatterns("*")
                 .setHandshakeHandler(new DefaultHandshakeHandler() {
 
                     @Override
-                    protected @Nullable Principal determineUser(
-                            ServerHttpRequest request, 
+                    protected @Nullable
+                    Principal determineUser(
+                            ServerHttpRequest request,
                             WebSocketHandler wsHandler,
                             Map<String, Object> attributes) {
-                        
-                        String email = (String)attributes.get("email");
+
+                        String email = (String) attributes.get("email");
                         Principal principal = new Principal() {
                             @Override
                             public String getName() {
@@ -83,7 +84,7 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
                 })
                 .withSockJS();
     }
-    
+
     private HandshakeInterceptor Interceptor() {
         return null;
     }

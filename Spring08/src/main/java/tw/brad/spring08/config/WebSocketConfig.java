@@ -1,4 +1,4 @@
-package tw.brad.spring08.websocket;
+package tw.brad.spring08.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         MyWebSocketHanlder hanlder = new MyWebSocketHanlder();
-        registry.addHandler(hanlder, new String[] {"/ws"}).setAllowedOrigins("*");
+        registry.addHandler(hanlder, new String[]{"/ws"}).setAllowedOrigins("*");
     }
 
 }
