@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>Login Page</h1>
+        <hr>
+        <form th:action="@{/doLogin}" method="post">
+            <div>
+                <label>帳號</label>
+                <input name="email">
+            </div>
+            <div>
+                <label>密碼</label>
+                <input name="pw" type="password">
+            </div>
+            <div><button type="submit">登入</button></div>
+        </form>
+    </body>
+</html>
