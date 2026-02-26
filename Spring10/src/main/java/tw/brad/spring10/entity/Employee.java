@@ -25,5 +25,5 @@ public class Employee {
     private String title;
 
     @Column(name = "Salary")
-    private String salary;
+    private Float salary;
 }
